@@ -30,6 +30,13 @@ void PlayerObject_ringJump(void* self, GameObject* ring) {
 	if(ring->m_bHasBeenActivated) playSound("orbJump01.ogg");
 }
 
+void GJBaseGameLayer_bumpPlayer(void* self, PlayerObject* player, GameObject* pad) {
+    matdash::orig<&GJBaseGameLayer_bumpPlayer>(self, player, pad);
+	if(pad->m_bHasBeenActivated) playSound("padJump01.ogg");
+}
+
+
+
 void PlayLayer_update_(gd::PlayLayer* self, float dt) {
 	
 	auto p1 = self->m_pPlayer1;
@@ -56,5 +63,6 @@ void mod_main(HMODULE) {
 	//matdash::create_console();
   
     matdash::add_hook<&PlayerObject_ringJump>(gd::base + 0x1F4FF0);
-    matdash::add_hook<&PlayLayer_update_, matdash::Thiscall>(gd::base + 0x2029c0);
+    matdash::add_hook<&GJBaseGameLayer_bumpPlayer>(gd::base + 0x10ED50);
+    matdash::add_hook<&PlayLayer_update_, matdash::Thiscall>(gd::base + 0x2029C0);
 }
