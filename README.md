@@ -5,9 +5,11 @@ warning: buggy and incomplete
 ## Sounds
 
 - `orbJump01.ogg` played when activating an orb
-- `jump01.ogg` played when you jump (bad implemented and very buggy at the moment)
+- `cubeJump01.ogg` played when you jump with the cube game mode
+- `robotJump01.ogg` played when you jump with the robot game mode
 - `padJump01.ogg` played when activating a pad
 - `collectItem01.ogg` played when an item is collected (key, coin, heart..)
+- `collectCoin01.ogg` played when a coin is collected (user/secret coin)
 
 ## Setup
 
