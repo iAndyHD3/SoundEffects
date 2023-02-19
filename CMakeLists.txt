@@ -10,7 +10,7 @@ add_library(SoundEffects SHARED src/main.cpp)
 include(cmake/CPM.cmake)
 
 CPMAddPackage("gh:matcool/mat-dash#cdc9f70")
-CPMAddPackage("gh:HJfod/cocos-headers#cbf79fc")
+CPMAddPackage("gh:iAndyHD3/cocos-headers#9af919e")
 CPMAddPackage("gh:HJfod/gd.h#90f2110")
 CPMAddPackage("gh:TsudaKageyu/minhook#4a45552")
 CPMAddPackage("gh:fmtlib/fmt#a337011")
