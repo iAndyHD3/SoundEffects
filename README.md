@@ -1,25 +1,44 @@
 # SoundEffects
-A geometry dash mod that adds sound effects to gameplay events
-warning: buggy and incomplete
+A geometry dash mod that adds playss sound effects to gameplay events
+Place the sounds in your resources folder
 
 ## Sounds
 
-- `orbJump01.ogg` played when activating an orb
-- `cubeJump01.ogg` played when you jump with the cube game mode
-- `robotJump01.ogg` played when you jump with the robot game mode
-- `padJump01.ogg` played when activating a pad
-- `collectItem01.ogg` played when an item is collected (key, coin, heart..)
-- `collectCoin01.ogg` played when a coin is collected (user/secret coin)
+### GameMode Jumps / Clicks
+- `cubeJump01.ogg`
+- `ballJump01.ogg`
+- `ufoJump01.ogg`
+- `ballJump01.ogg`
+- `ufoJump01.ogg`
+- `waveJump01.ogg`
+- `spiderJump01.ogg`
+- `robotJump01.ogg`
 
-## Setup
+### Orbs
+- `pinkOrb.ogg`;
+- `yellowOrb.ogg`;
+- `redOrb.ogg`;
+- `blueOrb.ogg`;
+- `greenOrb.ogg`;
+- `blackOrb.ogg`;
+- `greenDashOrb.ogg`;
+- `pinkDashOrb.ogg`;
 
-clone and configure/build with cmake using x86 msvc
+### Pads
+- `pinkPad.ogg`;
+- `yellowPad.ogg`;
+- `redPad.ogg`;
+- `bluePad.ogg`;
 
-### Manual Setup
-if u want to do it in cmd then
-```bash
-# Configure
-cmake -B build -A win32
-# Build
-cmake --build build --config Release
-```
+### Speed changes
+- `speed05.ogg`
+- `speed1.ogg`
+- `speed2.ogg`
+- `speed3.ogg`
+- `speed4.ogg`
+
+### Others
+- `collectItem01.ogg` when an item is collected (key, coin, heart..)
+- `collectCoin01.ogg` when a coin is collected (user/secret coin)
+
+

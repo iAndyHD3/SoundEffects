@@ -3,3 +3,5 @@ out/
 .vs/
 .vscode/
 *.bat
+.xmake/
+cfg.txt

@@ -11,107 +11,154 @@
 
 // gd.h includes cocos2d.h
 #include <gd.h>
-#include <fmt/format.h>
+#include "utils.h"
 
 using namespace gd;
 
+int getObjectID(void* object) {
+	return MBO(int, object, 0x360);
+}
 
-#define playSound(str) gd::GameSoundManager::sharedState()->playSound(str)
-#define MEMBERBYOFFSET(type, class, offset) *reinterpret_cast<type*>(reinterpret_cast<uintptr_t>(class) + offset)
-#define MBO MEMBERBYOFFSET
+void soundmanager_playsound(const char* sound) {
+	gd::GameSoundManager::sharedState()->playSound(sound);
+}
 
-/*
-to debug sounds existing .ogg files can be used e.g
-gold01.ogg, gold02.ogg, quitSound_01.ogg
-however std::cout is better than randomly playing sounds lol
-*/
-
+PlayerObject* getPlayer()
+{
+	auto pl = GameManager::sharedState()->getPlayLayer();
+	if(!pl) return nullptr;
+	PlayerObject* po = pl->m_pPlayer1;
+	if(!po) return nullptr;
+	return po;
+}
+bool ignoreOrbs = false;
 //orb
-void PlayerObject_ringJump(void* self, GameObject* ring) {
+void PlayerObject_ringJump(void* self, GameObject* ring)
+{
+	ignoreOrbs = true;
     matdash::orig<&PlayerObject_ringJump>(self, ring);
-	if(ring->m_bHasBeenActivated) playSound("orbJump01.ogg");
+	ignoreOrbs = false;
+	if(ring->m_bHasBeenActivated)
+	{
+		switch(getObjectID(ring))
+		{
+			case 36:   return playSound(YELLOW_ORB);
+			case 84:   return playSound(BLUE_ORB);
+			case 141:  return playSound(PINK_ORB);
+			case 1022: return playSound(GREEN_ORB);
+			case 1330: return playSound(BLACK_ORB);
+			case 1333: return playSound(RED_ORB);
+			case 1704: return playSound(GREEN_DASH_ORB);
+			case 1751: return playSound(PINK_DASH_ORB);
+		}
+		printAll("test", getObjectID(ring));
+	}
 }
 //pad
-void GJBaseGameLayer_bumpPlayer(void* self, PlayerObject* player, GameObject* pad) {
+void GJBaseGameLayer_bumpPlayer(void* self, PlayerObject* player, GameObject* pad)
+{
     matdash::orig<&GJBaseGameLayer_bumpPlayer>(self, player, pad);
-	if(pad->m_bHasBeenActivated) playSound("padJump01.ogg");
+	if(pad->m_bHasBeenActivated)
+	{
+		switch(getObjectID(pad))
+		{
+			case 35:   return playSound(YELLOW_PAD);
+			case 140:  return playSound(PINK_PAD);
+			case 1332: return playSound(RED_PAD);
+		}
+	}
 }
 
 
 //collectible
-void EffectGameObject_triggerObject(void* self, void* bgl) {
-    
+void EffectGameObject_triggerObject(void* self, void* bgl)
+{
 	matdash::orig<&EffectGameObject_triggerObject>(self, bgl);
-	int objectID = MBO(int, self, 0x360);
-	//std::cout << fmt::format("trigger object, objid: {}", objectID) << std::endl;
-	switch(objectID) {
-	
+	int objectID = getObjectID(self);
+	//printAll("objectID", objectID, "triggered");
+	switch(objectID)
+	{
 		case 1275:
 		case 1587:
 		case 1588:
 		case 1589:
 		case 1614:
-		playSound("collectItem01.ogg");
+		playSound(COLLECTIBLE);
 	}
-	
 }
-
-bool isPlayerRobot(PlayerObject* p) { return MBO(bool, p, 1596); }
-
-bool isPlayerCube(PlayerObject* p)
-{
-	return ( !MBO(bool, p, 1592) && !MBO(bool, p, 1593) && !MBO(bool, p, 1594) && !MBO(bool, p, 1595) && !MBO(bool, p, 1596) && !MBO(bool, p, 1597) );
-}
-
-bool isPlayerCubeOrRobot(PlayerObject* p) { return isPlayerCube(p) || isPlayerRobot(p); }
-
-//jump
-void PlayLayer_update_(gd::PlayLayer* self, float dt) {
-	
-	auto p1 = self->m_pPlayer1;
-	if(!isPlayerCubeOrRobot(p1)) return matdash::orig<&PlayLayer_update_, matdash::Thiscall>(self, dt);
-	
-	//std::cout << fmt::format("isPlayerCubeOrRobot: {}", isPlayerCubeOrRobot(p1)) << std::endl;
-
-	bool isFalling = p1->playerIsFalling();
-	bool isPressingDown = MBO(int, p1, 0x611) != 0;
-	bool onGround = !p1->m_isOnGround && (int)p1->unk610 == 213;
-	
-	matdash::orig<&PlayLayer_update_, matdash::Thiscall>(self, dt);
-
-	//idk this is crazy (and stupid)
-	if(!isFalling && !p1->playerIsFalling() && isPressingDown && onGround){
-		//std::cout << "jumped" << std::endl;
-		if(isPlayerRobot(p1)) playSound("robotJump01.ogg");
-		else if(isPlayerCube(p1)) playSound("cubeJump01.ogg");
-	}
-	//std::cout << fmt::format("isFalling: {}, isPressingDown: {}, onGround: {}, p1->playerIsFalling: {}", isFalling, isPressingDown, onGround, p1->playerIsFalling()) << std::endl;
-}
-
 
 //coin
-void GameObject_destroyObject(void* self) {
+void GameObject_destroyObject(void* self)
+{
 	
-	int objectID = MBO(int, self, 0x360);
-	if(objectID == 142 || objectID == 1329) playSound("collectCoin01.ogg");
+	int objectID = getObjectID(self);
+	if(objectID == 142 || objectID == 1329) {
+		playSound(COLLECT_COIN);
+	}
 	matdash::orig<&GameObject_destroyObject>(self);
 }
 
+void PlayerObject_incrementJumps(PlayerObject* self)
+{
+	matdash::orig<&PlayerObject_incrementJumps>(self);
+	if(!ignoreOrbs && getPlayer())
+	playJumpSoundForGameMode(self);
+}
 
+void PlayerObject_spiderTestJump(void* self, bool idk)
+{	
+	matdash::orig<&PlayerObject_spiderTestJump>(self, idk);
+	if(getPlayer()) playSound(SPIDER_JUMP);
+}
 
-void mod_main(HMODULE) {
+void GJBaseGameLayer_pushButton(void* self, int a, int b)
+{
+	matdash::orig<&GJBaseGameLayer_pushButton>(self, a, b);
+	auto player = getPlayer();
+	if(!player) return;
+
+	if(is_ufo(player))       playSound(UFO_JUMP);
+	else if(is_wave(player)) playSound(WAVE_JUMP);
+}
+
+//this function is JUST for speed objects smh 
+void GameObject_triggerObject(void* self, void* a)
+{
+	matdash::orig<GameObject_triggerObject>(self, a);
+	int objectID = getObjectID(self);
+	switch(objectID)
+	{
+		case 200:  return playSound(SPEED_05);
+		case 201:  return playSound(SPEED_1);
+		case 202:  return playSound(SPEED_2);
+		case 203:  return playSound(SPEED_3);
+		case 1334: return playSound(SPEED_4);
+	}
+}
+
+//blue orb is special and it doesnt trigger bump player for some reason
+void PlayerObjecT_propellPlayer(void* self, float idk)
+{
+	matdash::orig<&PlayerObjecT_propellPlayer>(self, idk);
+	if(idk == 0.8f) playSound(BLUE_ORB);
+}
+void mod_main(HMODULE)
+{
 
 	//make sure to comment this for release
 	//matdash::create_console();
-
 	
+    //matdash::add_hook<&GameObject_activatedByPlayer>(gd::base + 0xef0e0);
+   // matdash::add_hook<&PlayLayer_switchedMode>(gd::base + 0x1f6f70);
+    matdash::add_hook<&PlayerObjecT_propellPlayer>(gd::base + 0x1f8b50);
+    matdash::add_hook<&GameObject_triggerObject>(gd::base + 0xd1790);
+    matdash::add_hook<&GJBaseGameLayer_pushButton>(gd::base + 0x111500);
+    matdash::add_hook<&PlayerObject_spiderTestJump>(gd::base + 0x1ed360);
     matdash::add_hook<&GameObject_destroyObject>(gd::base + 0xE5D80);
-	
-	
+    matdash::add_hook<&PlayerObject_incrementJumps>(gd::base + 0x1e9a20);
     matdash::add_hook<&PlayerObject_ringJump>(gd::base + 0x1F4FF0);
     matdash::add_hook<&GJBaseGameLayer_bumpPlayer>(gd::base + 0x10ED50);
     matdash::add_hook<&EffectGameObject_triggerObject>(gd::base + 0x253D60);
-    matdash::add_hook<&PlayLayer_update_, matdash::Thiscall>(gd::base + 0x2029C0);
 }
 
 /*
@@ -140,3 +187,32 @@ void PlayLayer_pickupItem(void* self, void* obj) {
 	matdash::orig<&PlayLayer_pickupItem>(self, obj);
 }
 */
+
+
+/*
+void GameObject_activatedByPlayer(void* self, void* a)
+{
+	int objectID = MBO(int, self, 0x360);
+	printAll("activatedByPlayer self", objectID);
+	void* po = getPlayer();
+	
+	if(objectID == 10 && is_gravity_flipped(po)) {
+		playSound(GRAVITY_NORMAL_PORTAL);
+	}
+
+	if(objectID == 11 && is_gravity_normal(po)) {
+		playSound(GRAVITY_INVERTED_PORTAL);
+	}
+	
+	matdash::orig<&GameObject_activatedByPlayer>(self, a);
+}
+
+
+void PlayLayer_switchedMode(void* self, int type)
+{
+	matdash::orig<&PlayLayer_switchedMode>(self, type);
+	printAll("switched mode", type);
+}
+*/
+
+
