@@ -51,7 +51,7 @@ void PlayerObject_ringJump(void* self, GameObject* ring)
 			case 1704: return playSound(GREEN_DASH_ORB);
 			case 1751: return playSound(PINK_DASH_ORB);
 		}
-		printAll("test", getObjectID(ring));
+		//printAll("test", getObjectID(ring));
 	}
 }
 //pad
@@ -75,7 +75,7 @@ void EffectGameObject_triggerObject(void* self, void* bgl)
 {
 	matdash::orig<&EffectGameObject_triggerObject>(self, bgl);
 	int objectID = getObjectID(self);
-	//printAll("objectID", objectID, "triggered");
+	////printAll("objectID", objectID, "triggered");
 	switch(objectID)
 	{
 		case 1275:
@@ -193,7 +193,7 @@ void PlayLayer_pickupItem(void* self, void* obj) {
 void GameObject_activatedByPlayer(void* self, void* a)
 {
 	int objectID = MBO(int, self, 0x360);
-	printAll("activatedByPlayer self", objectID);
+	//printAll("activatedByPlayer self", objectID);
 	void* po = getPlayer();
 	
 	if(objectID == 10 && is_gravity_flipped(po)) {
@@ -211,7 +211,7 @@ void GameObject_activatedByPlayer(void* self, void* a)
 void PlayLayer_switchedMode(void* self, int type)
 {
 	matdash::orig<&PlayLayer_switchedMode>(self, type);
-	printAll("switched mode", type);
+	//printAll("switched mode", type);
 }
 */
 
