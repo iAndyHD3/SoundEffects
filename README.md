@@ -5,14 +5,14 @@ Place the sounds in your resources folder
 ## Sounds
 
 ### GameMode Jumps / Clicks
-- `cubeJump01.ogg`
-- `ballJump01.ogg`
-- `ufoJump01.ogg`
-- `ballJump01.ogg`
-- `ufoJump01.ogg`
-- `waveJump01.ogg`
-- `spiderJump01.ogg`
-- `robotJump01.ogg`
+- `cubeJump.ogg`
+- `ballJump.ogg`
+- `ufoJump.ogg`
+- `ballJump.ogg`
+- `ufoJump.ogg`
+- `waveJump.ogg`
+- `spiderJump.ogg`
+- `robotJump.ogg`
 
 ### Orbs
 - `pinkOrb.ogg`;
@@ -38,7 +38,7 @@ Place the sounds in your resources folder
 - `speed4.ogg`
 
 ### Others
-- `collectItem01.ogg` when an item is collected (key, coin, heart..)
-- `collectCoin01.ogg` when a coin is collected (user/secret coin)
+- `collectItem.ogg` when an item is collected (key, coin, heart..)
+- `collectCoin.ogg` when a coin is collected (user/secret coin)
 
 
