@@ -41,4 +41,3 @@ Place the sounds in your resources folder
 - `collectItem.ogg` when an item is collected (key, coin, heart..)
 - `collectCoin.ogg` when a coin is collected (user/secret coin)
 
-

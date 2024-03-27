@@ -1,0 +1,9 @@
+{
+	"geode": "2.0.0-beta.22",
+	"gd": "2.204",
+	"version": "v1.0.0",
+	"id": "iandyhd3.soundeffects",
+	"name": "SoundEffects",
+	"developer": "iAndyHD3",
+	"description": "adds sound effects to gameplay events"
+}
